@@ -6,7 +6,8 @@ from homeassistant.helpers import config_entry_flow
 from homeassistant.const import CONF_HOST, CONF_PORT
 import homeassistant.helpers.config_validation as cv
 
-from .const import DOMAIN, DEFAULT_PORT, CONF_CAST_MEDIA_PLAYER, CONF_IGNORE_CEC
+from .const import (
+    DOMAIN, DEFAULT_PORT, CONF_CAST_MEDIA_PLAYER, CONF_IGNORE_CEC)
 
 REQUIREMENTS = ['pychromecast==2.1.0']
 

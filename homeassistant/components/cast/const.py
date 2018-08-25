@@ -1,4 +1,4 @@
-"""Constants for the Cast component"""
+"""Constants for the Cast component."""
 
 DOMAIN = 'cast'
 DEFAULT_PORT = 8009
