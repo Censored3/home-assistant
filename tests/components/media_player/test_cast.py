@@ -413,4 +413,6 @@ async def test_entry_setup_list_config(hass: HomeAssistantType):
 
     assert len(mock_setup.mock_calls) == 2
     assert mock_setup.mock_calls[0][1][1] == {'host': 'bla'}
+    assert mock_setup.mock_calls[0][1][2] == {'port': '8009'}
     assert mock_setup.mock_calls[1][1][1] == {'host': 'blu'}
+    assert mock_setup.mock_calls[1][1][2] == {'port': '12345'}
