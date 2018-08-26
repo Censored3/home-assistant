@@ -214,13 +214,15 @@ async def test_normal_chromecast_not_starting_discovery(hass):
     with patch('homeassistant.components.media_player.cast.'
                '_setup_internal_discovery') as setup_discovery:
         # normal (non-group) chromecast shouldn't start discovery.
-        add_entities = await async_setup_cast(hass, {'host': 'host1'})
+        add_entities = await async_setup_cast(
+            hass, {'host': 'host1', 'port': 8009})
         await hass.async_block_till_done()
         assert add_entities.call_count == 1
         assert setup_discovery.call_count == 0
 
         # Same entity twice
-        add_entities = await async_setup_cast(hass, {'host': 'host1'})
+        add_entities = await async_setup_cast(
+            hass, {'host': 'host1', 'port': 8009})
         await hass.async_block_till_done()
         assert add_entities.call_count == 0
         assert setup_discovery.call_count == 0
