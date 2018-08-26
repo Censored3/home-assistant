@@ -1,6 +1,6 @@
-# Notice:
-# When updating this file, please also update virtualization/Docker/Dockerfile.dev
-# This way, the development image and the production image are kept in sync.
+# Dockerfile for development
+# Based on the production Dockerfile, but with development additions.
+# Keep this file as close as possible to the production Dockerfile, so the environments match.
 
 FROM python:3.6
 LABEL maintainer="Paulus Schoutsen <Paulus@PaulusSchoutsen.nl>"
@@ -10,6 +10,7 @@ LABEL maintainer="Paulus Schoutsen <Paulus@PaulusSchoutsen.nl>"
 #ENV INSTALL_OPENALPR no
 #ENV INSTALL_FFMPEG no
 #ENV INSTALL_LIBCEC no
+#ENV INSTALL_COAP no
 #ENV INSTALL_SSOCR no
 #ENV INSTALL_IPERF3 no
 
@@ -24,10 +25,30 @@ RUN virtualization/Docker/setup_docker_prereqs
 
 # Install hass component dependencies
 COPY requirements_all.txt requirements_all.txt
+
 # Uninstall enum34 because some dependencies install it but breaks Python 3.4+.
 # See PR #8103 for more info.
 RUN pip3 install --no-cache-dir -r requirements_all.txt && \
     pip3 install --no-cache-dir mysqlclient psycopg2 uvloop cchardet cython
+
+# BEGIN: Development additions
+
+# Install nodejs
+RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - && \
+    apt-get install -y nodejs
+
+# Install tox
+RUN pip3 install --no-cache-dir tox
+
+# Copy over everything required to run tox
+COPY requirements_test_all.txt setup.cfg setup.py tox.ini ./
+COPY homeassistant/const.py homeassistant/const.py
+
+# Prefetch dependencies for tox
+COPY homeassistant/package_constraints.txt homeassistant/package_constraints.txt
+RUN tox -e py36 --notest
+
+# END: Development additions
 
 # Copy source
 COPY . .
