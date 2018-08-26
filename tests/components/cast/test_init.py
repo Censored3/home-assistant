@@ -32,7 +32,7 @@ async def test_configuring_cast_creates_entry(hass):
             patch('pychromecast.discovery.discover_chromecasts',
                   return_value=True):
         await async_setup_component(hass, cast.DOMAIN, {
-            'cast': ''
+            'cast': {}
         })
         await hass.async_block_till_done()
 
