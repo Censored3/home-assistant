@@ -393,8 +393,8 @@ async def test_entry_setup_single_config(hass: HomeAssistantType):
             return_value=mock_coro()) as mock_setup:
         await cast.async_setup_entry(hass, MockConfigEntry(), None)
 
+    _LOGGER.warning(mock_setup.mock_calls)
     assert len(mock_setup.mock_calls) == 1
-    print(mock_setup.mock_calls)
     assert mock_setup.mock_calls[0][1][1] == {'host': 'bla'}
 
 
