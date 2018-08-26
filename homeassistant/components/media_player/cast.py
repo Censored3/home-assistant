@@ -205,6 +205,8 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     if not isinstance(config, list):
         config = [config]
 
+    _LOGGER.warning("config: %s"%(config))
+
     await asyncio.wait([
         _async_setup_platform(hass, cfg, async_add_entities, None)
         for cfg in config])
