@@ -395,7 +395,9 @@ async def test_entry_setup_single_config(hass: HomeAssistantType):
 
     print(mock_setup.mock_calls[0])
     assert len(mock_setup.mock_calls) == 1
-    assert mock_setup.mock_calls[0][1][1] == {'host': 'bla'}
+    assert mock_setup.mock_calls[0][1][1] == {
+        'host': 'bla', 'ignore_cec': [], 'port': 8009
+        }
 
 
 async def test_entry_setup_list_config(hass: HomeAssistantType):
@@ -404,7 +406,7 @@ async def test_entry_setup_list_config(hass: HomeAssistantType):
         'cast': {
             'media_player': [
                 {'host': 'bla'},
-                {'host': 'blu'},
+                {'host': 'blu', 'port': '12345'}
             ]
         }
     })
@@ -415,7 +417,9 @@ async def test_entry_setup_list_config(hass: HomeAssistantType):
         await cast.async_setup_entry(hass, MockConfigEntry(), None)
 
     assert len(mock_setup.mock_calls) == 2
-    assert mock_setup.mock_calls[0][1][1] == {'host': 'bla'}
-    assert mock_setup.mock_calls[0][1][2] == {'port': '8009'}
-    assert mock_setup.mock_calls[1][1][1] == {'host': 'blu'}
-    assert mock_setup.mock_calls[1][1][2] == {'port': '12345'}
+    assert mock_setup.mock_calls[0][1][1] == {
+        'host': 'bla', 'port': 8009, 'ignore_cec': []
+        }
+    assert mock_setup.mock_calls[1][1][1] == {
+        'host': 'bla', 'port': 12345, 'ignore_cec': []
+        }
