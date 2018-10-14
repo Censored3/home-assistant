@@ -57,7 +57,7 @@ SIGNAL_CAST_DISCOVERED = 'cast_discovered'
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_HOST): cv.string,
-    vol.Optional(CONF_PORT): cv.port,
+    vol.Optional(CONF_PORT, default=DEFAULT_PORT): cv.port,
     vol.Optional(CONF_IGNORE_CEC, default=[]):
         vol.All(cv.ensure_list, [cv.string])
 })
