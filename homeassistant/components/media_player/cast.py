@@ -237,7 +237,7 @@ async def _async_setup_platform(hass: HomeAssistantType, config: ConfigType,
                               port=discovery_info['port'])
     elif CONF_HOST in config:
         info = ChromecastInfo(host=config[CONF_HOST],
-                              port=config.get(CONF_PORT, DEFAULT_PORT))
+                              port=config[CONF_PORT])
 
     @callback
     def async_cast_discovered(discover: ChromecastInfo) -> None:
