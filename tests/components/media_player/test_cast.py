@@ -14,6 +14,7 @@ from homeassistant.components.media_player.cast import ChromecastInfo
 from homeassistant.const import EVENT_HOMEASSISTANT_STOP
 from homeassistant.helpers.dispatcher import async_dispatcher_connect, \
     async_dispatcher_send
+import homeassistant.components.media_player as mp
 from homeassistant.components.media_player import cast
 from homeassistant.setup import async_setup_component
 
@@ -51,6 +52,9 @@ async def async_setup_cast(hass, config=None, discovery_info=None):
     """Set up the cast platform."""
     if config is None:
         config = {}
+    else:
+        config = MockConfigEntry(domain='media_player', data=config)
+
     add_entities = Mock()
 
     await cast.async_setup_platform(hass, config, add_entities,
