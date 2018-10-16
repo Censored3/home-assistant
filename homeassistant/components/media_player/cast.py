@@ -227,7 +227,7 @@ async def _async_setup_platform(hass: HomeAssistantType, config: ConfigType,
     import pychromecast
 
     # Import CEC IGNORE attributes
-    pychromecast.IGNORE_CEC += config.get(CONF_IGNORE_CEC, [])
+    pychromecast.IGNORE_CEC += config[CONF_IGNORE_CEC]
     hass.data.setdefault(ADDED_CAST_DEVICES_KEY, set())
     hass.data.setdefault(KNOWN_CHROMECAST_INFO_KEY, set())
 
