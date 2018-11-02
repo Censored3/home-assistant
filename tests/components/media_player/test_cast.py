@@ -52,7 +52,8 @@ async def async_setup_cast(hass, config=None, discovery_info=None):
         config = {}
     # add_entities = Mock()
 
-    with patch('cast._async_setup_platform.async_add_entities', new=Mock()) \
+    with patch('homeassistant.components.media_player.cast.'
+               '_async_setup_platform.async_add_entities', new=Mock()) \
             as add_entities:
         await async_setup_component(hass, 'media_player', config)
         await hass.async_block_till_done()
