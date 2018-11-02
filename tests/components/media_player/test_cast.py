@@ -49,7 +49,7 @@ def get_fake_chromecast_info(host='192.168.178.42', port=8009,
                           friendly_name="Speaker")
 
 
-async def async_setup_cast(hass, config=PLATFORM_CONFIG, discovery_info=None):
+async def async_setup_cast(hass, config=None, discovery_info=None):
     """Set up the cast platform."""
     if not config:
         config = PLATFORM_CONFIG
