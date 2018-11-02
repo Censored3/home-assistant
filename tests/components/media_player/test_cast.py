@@ -51,7 +51,7 @@ def get_fake_chromecast_info(host='192.168.178.42', port=8009,
 
 async def async_setup_cast(hass, config=None, discovery_info=None):
     """Set up the cast platform."""
-    if not discover_info:
+    if not discovery_info:
         if not config:
             config = PLATFORM_CONFIG
         else:
@@ -80,7 +80,7 @@ async def async_setup_cast_internal_discovery(hass, config=None,
 
     with patch('pychromecast.start_discovery',
                return_value=(listener, None)) as start_discovery:
-        add_entities = await async_setup_cast_platform(hass, config, discovery_info)
+        add_entities = await async_setup_cast(hass, config, discovery_info)
         await hass.async_block_till_done()
         await hass.async_block_till_done()
 
