@@ -51,19 +51,24 @@ def get_fake_chromecast_info(host='192.168.178.42', port=8009,
 
 async def async_setup_cast(hass, config=None, discovery_info=None):
     """Set up the cast platform."""
-    if not config:
-        config = PLATFORM_CONFIG
+    if not discover_info:
+        if not config:
+            config = PLATFORM_CONFIG
+        else:
+            config = PLATFORM_CONFIG['media_player'].update(config)
+
+        with patch('homeassistant.helpers.entity_platform.EntityPlatform.'
+                   '_async_schedule_add_entities', new=Mock()) \
+                as add_entities:
+            await async_setup_component(hass, 'media_player', config)
+            await hass.async_block_till_done()
+
     else:
-        config = PLATFORM_CONFIG['media_player'].update(config)
-
-    with patch('homeassistant.helpers.entity_platform.EntityPlatform.'
-               '_async_schedule_add_entities', new=Mock()) \
-            as add_entities:
-        await async_setup_component(hass, 'media_player', config)
+        # setup only platform
+        add_entities = Mock()
+        await cast.async_setup_platform(hass, config, add_entities,
+                                        discovery_info=discovery_info)
         await hass.async_block_till_done()
-
-    # await cast.async_setup_platform(hass, config, add_entities,
-    #                                 discovery_info=discovery_info)
 
     return add_entities
 
@@ -75,7 +80,7 @@ async def async_setup_cast_internal_discovery(hass, config=None,
 
     with patch('pychromecast.start_discovery',
                return_value=(listener, None)) as start_discovery:
-        add_entities = await async_setup_cast(hass, config, discovery_info)
+        add_entities = await async_setup_cast_platform(hass, config, discovery_info)
         await hass.async_block_till_done()
         await hass.async_block_till_done()
 
