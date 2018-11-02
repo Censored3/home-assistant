@@ -52,7 +52,7 @@ async def async_setup_cast(hass, config=None, discovery_info=None):
         config = {}
     # add_entities = Mock()
 
-    with patch('homeassistant.helpers.entity_platform.'
+    with patch('homeassistant.helpers.entity_platform.EntityPlatform.'
                '_async_schedule_add_entities', new=Mock()) \
             as add_entities:
         await async_setup_component(hass, 'media_player', config)
