@@ -18,6 +18,9 @@ from homeassistant.setup import async_setup_component
 
 from tests.common import MockConfigEntry, mock_coro
 
+# 'base' config to use when setting up cast through deprecated platform method
+PLATFORM_CONFIG = {'media_player': {'platform': 'cast'}}
+
 
 @pytest.fixture(autouse=True)
 def cast_mock():
@@ -46,11 +49,12 @@ def get_fake_chromecast_info(host='192.168.178.42', port=8009,
                           friendly_name="Speaker")
 
 
-async def async_setup_cast(hass, config=None, discovery_info=None):
+async def async_setup_cast(hass, config=PLATFORM_CONFIG, discovery_info=None):
     """Set up the cast platform."""
-    if config is None:
-        config = {'media_player': {'platform': 'cast'}}
-    # add_entities = Mock()
+    if not config:
+        config = PLATFORM_CONFIG
+    else:
+        config = PLATFORM_CONFIG['media_player'].update(config)
 
     with patch('homeassistant.helpers.entity_platform.EntityPlatform.'
                '_async_schedule_add_entities', new=Mock()) \
