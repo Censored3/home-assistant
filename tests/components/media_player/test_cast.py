@@ -49,7 +49,7 @@ def get_fake_chromecast_info(host='192.168.178.42', port=8009,
 async def async_setup_cast(hass, config=None, discovery_info=None):
     """Set up the cast platform."""
     if config is None:
-        config = {}
+        config = {'media_player': {'platform': 'cast'}}
     # add_entities = Mock()
 
     with patch('homeassistant.helpers.entity_platform.EntityPlatform.'
