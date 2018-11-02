@@ -2,12 +2,12 @@
 import voluptuous as vol
 
 from homeassistant import config_entries
-from homeassistant.helpers import config_entry_flow
 from homeassistant.const import CONF_HOST, CONF_PORT
+from homeassistant.helpers import config_entry_flow
 import homeassistant.helpers.config_validation as cv
 
 from .const import (
-    DOMAIN, DEFAULT_PORT, CONF_CAST_MEDIA_PLAYER, CONF_IGNORE_CEC)
+    CONF_CAST_MEDIA_PLAYER, CONF_IGNORE_CEC, DEFAULT_PORT, DOMAIN)
 
 REQUIREMENTS = ['pychromecast==2.1.0']
 

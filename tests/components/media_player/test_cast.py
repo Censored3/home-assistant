@@ -1,6 +1,5 @@
 """The tests for the Cast Media player platform."""
 # pylint: disable=protected-access
-import asyncio
 from typing import Optional
 from unittest.mock import patch, MagicMock, Mock
 from uuid import UUID
@@ -51,12 +50,15 @@ async def async_setup_cast(hass, config=None, discovery_info=None):
     """Set up the cast platform."""
     if config is None:
         config = {}
-    add_entities = Mock()
+    # add_entities = Mock()
 
+    with patch('cast._async_setup_platform.async_add_entities', new=Mock()) \
+            as add_entities:
+        await async_setup_component(hass, 'media_player', config)
+        await hass.async_block_till_done()
 
-    await cast.async_setup_platform(hass, config, add_entities,
-                                    discovery_info=discovery_info)
-    await hass.async_block_till_done()
+    # await cast.async_setup_platform(hass, config, add_entities,
+    #                                 discovery_info=discovery_info)
 
     return add_entities
 
