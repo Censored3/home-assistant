@@ -14,7 +14,6 @@ from homeassistant.components.media_player.cast import ChromecastInfo
 from homeassistant.const import EVENT_HOMEASSISTANT_STOP
 from homeassistant.helpers.dispatcher import async_dispatcher_connect, \
     async_dispatcher_send
-import homeassistant.components.media_player as mp
 from homeassistant.components.media_player import cast
 from homeassistant.setup import async_setup_component
 
@@ -52,10 +51,8 @@ async def async_setup_cast(hass, config=None, discovery_info=None):
     """Set up the cast platform."""
     if config is None:
         config = {}
-    else:
-        config = MockConfigEntry(domain='media_player', data=config)
-
     add_entities = Mock()
+
 
     await cast.async_setup_platform(hass, config, add_entities,
                                     discovery_info=discovery_info)
@@ -108,40 +105,38 @@ async def async_setup_media_player_cast(hass: HomeAssistantType,
         return chromecast, entity
 
 
-@asyncio.coroutine
-def test_start_discovery_called_once(hass):
+async def test_start_discovery_called_once(hass):
     """Test pychromecast.start_discovery called exactly once."""
     with patch('pychromecast.start_discovery',
                return_value=(None, None)) as start_discovery:
-        yield from async_setup_cast(hass)
+        await async_setup_cast(hass)
 
         assert start_discovery.call_count == 1
 
-        yield from async_setup_cast(hass)
+        await async_setup_cast(hass)
         assert start_discovery.call_count == 1
 
 
-@asyncio.coroutine
-def test_stop_discovery_called_on_stop(hass):
+async def test_stop_discovery_called_on_stop(hass):
     """Test pychromecast.stop_discovery called on shutdown."""
     with patch('pychromecast.start_discovery',
                return_value=(None, 'the-browser')) as start_discovery:
         # start_discovery should be called with empty config
-        yield from async_setup_cast(hass, {})
+        await async_setup_cast(hass, {})
 
         assert start_discovery.call_count == 1
 
     with patch('pychromecast.stop_discovery') as stop_discovery:
         # stop discovery should be called on shutdown
         hass.bus.async_fire(EVENT_HOMEASSISTANT_STOP)
-        yield from hass.async_block_till_done()
+        await hass.async_block_till_done()
 
         stop_discovery.assert_called_once_with('the-browser')
 
     with patch('pychromecast.start_discovery',
                return_value=(None, 'the-browser')) as start_discovery:
         # start_discovery should be called again on re-startup
-        yield from async_setup_cast(hass)
+        await async_setup_cast(hass)
 
         assert start_discovery.call_count == 1
 
