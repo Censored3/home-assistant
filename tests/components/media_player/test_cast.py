@@ -51,24 +51,25 @@ def get_fake_chromecast_info(host='192.168.178.42', port=8009,
 
 async def async_setup_cast(hass, config=None, discovery_info=None):
     """Set up the cast platform."""
-    if not discovery_info:
-        if not config:
-            config = PLATFORM_CONFIG
-        else:
-            config = PLATFORM_CONFIG['media_player'].update(config)
-
-        with patch('homeassistant.helpers.entity_platform.EntityPlatform.'
-                   '_async_schedule_add_entities', new=Mock()) \
-                as add_entities:
-            await async_setup_component(hass, 'media_player', config)
-            await hass.async_block_till_done()
-
+    if not config:
+        config = PLATFORM_CONFIG
     else:
-        # setup only platform
-        add_entities = Mock()
-        await cast.async_setup_platform(hass, config, add_entities,
-                                        discovery_info=discovery_info)
-        await hass.async_block_till_done()
+        config = PLATFORM_CONFIG['media_player'].update(config)
+
+    await async_setup_component(hass, 'media_player', config)
+    await hass.async_block_till_done()
+
+
+# original platform setup
+async def async_setup_cast_platform(hass, config=None, discovery_info=None):
+    """Set up the cast platform."""
+    if config is None:
+        config = {}
+    add_entities = Mock()
+
+    await cast.async_setup_platform(hass, config, add_entities,
+                                    discovery_info=discovery_info)
+    await hass.async_block_till_done()
 
     return add_entities
 
